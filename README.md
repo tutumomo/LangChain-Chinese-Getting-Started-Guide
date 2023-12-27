@@ -1,179 +1,179 @@
-# LangChain 中文入门教程
+# LangChain 中文入門教程
 
-> 为了便于阅读，已生成gitbook：[https://liaokong.gitbook.io/llm-kai-fa-jiao-cheng/](https://liaokong.gitbook.io/llm-kai-fa-jiao-cheng/)
+> 為了便於閱讀，已生成gitbook：[https://liaokong.gitbook.io/llm-kai-fa-jiao-cheng/](https://liaokong.gitbook.io/llm-kai-fa-jiao-cheng/)
 >
 > github地址：[https://github.com/liaokongVFX/LangChain-Chinese-Getting-Started-Guide](https://github.com/liaokongVFX/LangChain-Chinese-Getting-Started-Guide)
 
-> 因为langchain库一直在飞速更新迭代，但该文档写与4月初，并且我个人精力有限，所以colab里面的代码有可能有些已经过时。如果有运行失败的可以先搜索一下当前文档是否有更新，如文档也没更新欢迎提issue，或者修复后直接提pr，感谢~
+> 因為langchain庫一直在飛速更新迭代，但該文檔寫與4月初，並且我個人精力有限，所以colab裡面的代碼有可能有些已經過時。如果有運行失敗的可以先搜索一下當前文檔是否有更新，如文檔也沒更新歡迎提issue，或者修復後直接提pr，感謝~
 
-> 加了个 [CHANGELOG](CHANGELOG.md),更新了新的内容我会写在这里，方便之前看过的朋友快速查看新的更新内容
+> 加了個 [CHANGELOG](CHANGELOG.md),更新了新的內容我會寫在這裡，方便之前看過的朋友快速查看新的更新內容
 
-> 如果想把 OPENAI API 的请求根路由修改成自己的代理地址，可以通过设置环境变量 “OPENAI\_API\_BASE” 来进行修改。
+> 如果想把 OPENAI API 的請求根路由修改成自己的代理地址，可以通過設置環境變量 「OPENAI\_API\_BASE」 來進行修改。
 >
-> 相关参考代码：[https://github.com/openai/openai-python/blob/d6fa3bfaae69d639b0dd2e9251b375d7070bbef1/openai/\_\_init\_\_.py#L48](https://github.com/openai/openai-python/blob/d6fa3bfaae69d639b0dd2e9251b375d7070bbef1/openai/\_\_init\_\_.py#L48)
+> 相關參考代碼：[https://github.com/openai/openai-python/blob/d6fa3bfaae69d639b0dd2e9251b375d7070bbef1/openai/\_\_init\_\_.py#L48](https://github.com/openai/openai-python/blob/d6fa3bfaae69d639b0dd2e9251b375d7070bbef1/openai/\_\_init\_\_.py#L48)
 >
-> 或在初始化OpenAI相关模型对象时，传入“openai\_api\_base” 变量。
+> 或在初始化OpenAI相關模型對像時，傳入「openai\_api\_base」 變量。
 >
-> 相关参考代码：[https://github.com/hwchase17/langchain/blob/master/langchain/llms/openai.py#L148](https://github.com/hwchase17/langchain/blob/master/langchain/llms/openai.py#L148)
+> 相關參考代碼：[https://github.com/hwchase17/langchain/blob/master/langchain/llms/openai.py#L148](https://github.com/hwchase17/langchain/blob/master/langchain/llms/openai.py#L148)
 
-## 介绍
+## 介紹
 
-众所周知 OpenAI 的 API 无法联网的，所以如果只使用自己的功能实现联网搜索并给出回答、总结 PDF 文档、基于某个 Youtube 视频进行问答等等的功能肯定是无法实现的。所以，我们来介绍一个非常强大的第三方开源库：`LangChain` 。
+眾所周知 OpenAI 的 API 無法聯網的，所以如果只使用自己的功能實現聯網搜索並給出回答、總結 PDF 文檔、基於某個 Youtube 視頻進行問答等等的功能肯定是無法實現的。所以，我們來介紹一個非常強大的第三方開源庫：`LangChain` 。
 
-> 文档地址：https://python.langchain.com/en/latest/
+> 文檔地址：https://python.langchain.com/en/latest/
 
-这个库目前非常活跃，每天都在迭代，已经有 22k 的 star，更新速度飞快。
+這個庫目前非常活躍，每天都在迭代，已經有 22k 的 star，更新速度飛快。
 
-LangChain 是一个用于开发由语言模型驱动的应用程序的框架。他主要拥有 2 个能力：
+LangChain 是一個用於開發由語言模型驅動的應用程序的框架。他主要擁有 2 個能力：
 
-1. 可以将 LLM 模型与外部数据源进行连接
-2. 允许与 LLM 模型进行交互
+1. 可以將 LLM 模型與外部數據源進行連接
+2. 允許與 LLM 模型進行交互
 
-> LLM 模型：Large Language Model，大型语言模型
+> LLM 模型：Large Language Model，大型語言模型
 
 ##
 
-## 基础功能
+## 基礎功能
 
-LLM 调用
+LLM 調用
 
-* 支持多种模型接口，比如 OpenAI、Hugging Face、AzureOpenAI ...
-* Fake LLM，用于测试
-* 缓存的支持，比如 in-mem（内存）、SQLite、Redis、SQL
-* 用量记录
-* 支持流模式（就是一个字一个字的返回，类似打字效果）
+* 支持多種模型接口，比如 OpenAI、Hugging Face、AzureOpenAI ...
+* Fake LLM，用於測試
+* 緩存的支持，比如 in-mem（內存）、SQLite、Redis、SQL
+* 用量記錄
+* 支持流模式（就是一個字一個字的返回，類似打字效果）
 
-Prompt管理，支持各种自定义模板
+Prompt管理，支持各種自定義模板
 
-拥有大量的文档加载器，比如 Email、Markdown、PDF、Youtube ...
+擁有大量的文檔加載器，比如 Email、Markdown、PDF、Youtube ...
 
-对索引的支持
+對索引的支持
 
-* 文档分割器
+* 文檔分割器
 * 向量化
-* 对接向量存储与搜索，比如 Chroma、Pinecone、Qdrand
+* 對接向量存儲與搜索，比如 Chroma、Pinecone、Qdrand
 
 Chains
 
 * LLMChain
-* 各种工具Chain
+* 各種工具Chain
 * LangChainHub
 
 ## 必知概念
 
-相信大家看完上面的介绍多半会一脸懵逼。不要担心，上面的概念其实在刚开始学的时候不是很重要，当我们讲完后面的例子之后，在回来看上面的内容会一下明白很多。
+相信大家看完上面的介紹多半會一臉懵逼。不要擔心，上面的概念其實在剛開始學的時候不是很重要，當我們講完後面的例子之後，在回來看上面的內容會一下明白很多。
 
-但是，这里有几个概念是必须知道的。
+但是，這裡有幾個概念是必須知道的。
 
 ##
 
-### Loader 加载器
+### Loader 加載器
 
-顾名思义，这个就是从指定源进行加载数据的。比如：文件夹 `DirectoryLoader`、Azure 存储 `AzureBlobStorageContainerLoader`、CSV文件 `CSVLoader`、印象笔记 `EverNoteLoader`、Google网盘 `GoogleDriveLoader`、任意的网页 `UnstructuredHTMLLoader`、PDF `PyPDFLoader`、S3 `S3DirectoryLoader`/`S3FileLoader`、
+顧名思義，這個就是從指定源進行加載數據的。比如：文件夾 `DirectoryLoader`、Azure 存儲 `AzureBlobStorageContainerLoader`、CSV文件 `CSVLoader`、印象筆記 `EverNoteLoader`、Google網盤 `GoogleDriveLoader`、任意的網頁 `UnstructuredHTMLLoader`、PDF `PyPDFLoader`、S3 `S3DirectoryLoader`/`S3FileLoader`、
 
-Youtube `YoutubeLoader` 等等，上面只是简单的进行列举了几个，官方提供了超级的多的加载器供你使用。
+Youtube `YoutubeLoader` 等等，上面只是簡單的進行列舉了幾個，官方提供了超級的多的加載器供你使用。
 
 > https://python.langchain.com/docs/modules/data_connection/document_loaders.html
 
 ###
 
-### Document 文档
+### Document 文檔
 
-当使用loader加载器读取到数据源后，数据源需要转换成 Document 对象后，后续才能进行使用。
+當使用loader加載器讀取到數據源後，數據源需要轉換成 Document 對像後，後續才能進行使用。
 
 ###
 
 ### Text Spltters 文本分割
 
-顾名思义，文本分割就是用来分割文本的。为什么需要分割文本？因为我们每次不管是做把文本当作 prompt 发给 openai api ，还是还是使用 openai api embedding 功能都是有字符限制的。
+顧名思義，文本分割就是用來分割文本的。為什麼需要分割文本？因為我們每次不管是做把文本當作 prompt 發給 openai api ，還是還是使用 openai api embedding 功能都是有字符限制的。
 
-比如我们将一份300页的 pdf 发给 openai api，让他进行总结，他肯定会报超过最大 Token 错。所以这里就需要使用文本分割器去分割我们 loader 进来的 Document。
+比如我們將一份300頁的 pdf 發給 openai api，讓他進行總結，他肯定會報超過最大 Token 錯。所以這裡就需要使用文本分割器去分割我們 loader 進來的 Document。
 
 ###
 
-### Vectorstores 向量数据库
+### Vectorstores 向量數據庫
 
-因为数据相关性搜索其实是向量运算。所以，不管我们是使用 openai api embedding 功能还是直接通过向量数据库直接查询，都需要将我们的加载进来的数据 `Document` 进行向量化，才能进行向量运算搜索。转换成向量也很简单，只需要我们把数据存储到对应的向量数据库中即可完成向量的转换。
+因為數據相關性搜索其實是向量運算。所以，不管我們是使用 openai api embedding 功能還是直接通過向量數據庫直接查詢，都需要將我們的加載進來的數據 `Document` 進行向量化，才能進行向量運算搜索。轉換成向量也很簡單，只需要我們把數據存儲到對應的向量數據庫中即可完成向量的轉換。
 
-官方也提供了很多的向量数据库供我们使用。
+官方也提供了很多的向量數據庫供我們使用。
 
 > https://python.langchain.com/en/latest/modules/indexes/vectorstores.html
 
 ###
 
-### Chain 链
+### Chain 鏈
 
-我们可以把 Chain 理解为任务。一个 Chain 就是一个任务，当然也可以像链条一样，一个一个的执行多个链。
+我們可以把 Chain 理解為任務。一個 Chain 就是一個任務，當然也可以像鏈條一樣，一個一個的執行多個鏈。
 
 ###
 
 ### Agent 代理
 
-我们可以简单的理解为他可以动态的帮我们选择和调用chain或者已有的工具。
+我們可以簡單的理解為他可以動態的幫我們選擇和調用chain或者已有的工具。
 
-执行过程可以参考下面这张图:
+執行過程可以參考下面這張圖:
 
 ![image-20230406213322739](doc/image-20230406213322739.png)
 
 ### Embedding
 
-用于衡量文本的相关性。这个也是 OpenAI API 能实现构建自己知识库的关键所在。
+用於衡量文本的相關性。這個也是 OpenAI API 能實現構建自己知識庫的關鍵所在。
 
-他相比 fine-tuning 最大的优势就是，不用进行训练，并且可以实时添加新的内容，而不用加一次新的内容就训练一次，并且各方面成本要比 fine-tuning 低很多。
+他相比 fine-tuning 最大的優勢就是，不用進行訓練，並且可以實時添加新的內容，而不用加一次新的內容就訓練一次，並且各方面成本要比 fine-tuning 低很多。
 
-> 具体比较和选择可以参考这个视频：https://www.youtube.com/watch?v=9qq6HTr7Ocw
+> 具體比較和選擇可以參考這個視頻：https://www.youtube.com/watch?v=9qq6HTr7Ocw
 
 ##
 
-## 实战
+## 實戰
 
-通过上面的必备概念大家应该已经可以对 LangChain 有了一定的了解，但是可能还有有些懵。
+通過上面的必備概念大家應該已經可以對 LangChain 有了一定的瞭解，但是可能還有有些懵。
 
-这都是小问题，我相信看完后面的实战，你们就会彻底的理解上面的内容，并且能感受到这个库的真正强大之处。
+這都是小問題，我相信看完後面的實戰，你們就會徹底的理解上面的內容，並且能感受到這個庫的真正強大之處。
 
-因为我们 OpenAI API 进阶，所以我们后面的范例使用的 LLM 都是以Open AI 为例，后面大家可以根据自己任务的需要换成自己需要的 LLM 模型即可。
+因為我們 OpenAI API 進階，所以我們後面的範例使用的 LLM 都是以Open AI 為例，後面大家可以根據自己任務的需要換成自己需要的 LLM 模型即可。
 
-当然，在这篇文章的末尾，全部的全部代码都会被保存为一个 colab 的 ipynb 文件提供给大家来学习。
+當然，在這篇文章的末尾，全部的全部代碼都會被保存為一個 colab 的 ipynb 文件提供給大家來學習。
 
-> 建议大家按顺序去看每个例子，因为下一个例子会用到上一个例子里面的知识点。
+> 建議大家按順序去看每個例子，因為下一個例子會用到上一個例子裡面的知識點。
 >
-> 当然，如果有看不懂的也不用担心，可以继续往后看，第一次学习讲究的是不求甚解。
+> 當然，如果有看不懂的也不用擔心，可以繼續往後看，第一次學習講究的是不求甚解。
 
 ###
 
-### 完成一次问答
+### 完成一次問答
 
-第一个案例，我们就来个最简单的，用 LangChain 加载 OpenAI 的模型，并且完成一次问答。
+第一個案例，我們就來個最簡單的，用 LangChain 加載 OpenAI 的模型，並且完成一次問答。
 
-在开始之前，我们需要先设置我们的 openai 的 key，这个 key 可以在用户管理里面创建，这里就不细说了。
+在開始之前，我們需要先設置我們的 openai 的 key，這個 key 可以在用戶管理裡面創建，這裡就不細說了。
 
 ```python
 import os
 os.environ["OPENAI_API_KEY"] = '你的api key'
 ```
 
-然后，我们进行导入和执行
+然後，我們進行導入和執行
 
 ```py
 from langchain.llms import OpenAI
 
 llm = OpenAI(model_name="text-davinci-003",max_tokens=1024)
-llm("怎么评价人工智能")
+llm("怎麼評價人工智能")
 ```
 
 ![image-20230404232621517](doc/image-20230404232621517.png)
 
-这时，我们就可以看到他给我们的返回结果了，怎么样，是不是很简单。
+這時，我們就可以看到他給我們的返回結果了，怎麼樣，是不是很簡單。
 
-### 通过 Google 搜索并返回答案
+### 通過 Google 搜索並返回答案
 
-接下来，我们就来搞点有意思的。我们来让我们的 OpenAI api 联网搜索，并返回答案给我们。
+接下來，我們就來搞點有意思的。我們來讓我們的 OpenAI api 聯網搜索，並返回答案給我們。
 
-这里我们需要借助 Serpapi 来进行实现，Serpapi 提供了 google 搜索的 api 接口。
+這裡我們需要借助 Serpapi 來進行實現，Serpapi 提供了 google 搜索的 api 接口。
 
-首先需要我们到 Serpapi 官网上注册一个用户，https://serpapi.com/ 并复制他给我们生成 api key。
+首先需要我們到 Serpapi 官網上註冊一個用戶，https://serpapi.com/ 並複製他給我們生成 api key。
 
-然后我们需要像上面的 openai api key 一样设置到环境变量里面去。
+然後我們需要像上面的 openai api key 一樣設置到環境變量裡面去。
 
 ```python
 import os
@@ -181,7 +181,7 @@ os.environ["OPENAI_API_KEY"] = '你的api key'
 os.environ["SERPAPI_API_KEY"] = '你的api key'
 ```
 
-然后，开始编写我的代码
+然後，開始編寫我的代碼
 
 ```python
 from langchain.agents import load_tools
@@ -189,67 +189,67 @@ from langchain.agents import initialize_agent
 from langchain.llms import OpenAI
 from langchain.agents import AgentType
 
-# 加载 OpenAI 模型
+# 加載 OpenAI 模型
 llm = OpenAI(temperature=0,max_tokens=2048) 
 
- # 加载 serpapi 工具
+ # 加載 serpapi 工具
 tools = load_tools(["serpapi"])
 
-# 如果搜索完想再计算一下可以这么写
+# 如果搜索完想再計算一下可以這麼寫
 # tools = load_tools(['serpapi', 'llm-math'], llm=llm)
 
-# 如果搜索完想再让他再用python的print做点简单的计算，可以这样写
+# 如果搜索完想再讓他再用python的print做點簡單的計算，可以這樣寫
 # tools=load_tools(["serpapi","python_repl"])
 
-# 工具加载后都需要初始化，verbose 参数为 True，会打印全部的执行详情
+# 工具加載後都需要初始化，verbose 參數為 True，會打印全部的執行詳情
 agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
 
-# 运行 agent
+# 運行 agent
 agent.run("What's the date today? What great events have taken place today in history?")
 ```
 
 ![image-20230404234236982](doc/image-20230404234236982.png)
 
-我们可以看到，他正确的返回了日期（有时差），并且返回了历史上的今天。
+我們可以看到，他正確的返回了日期（有時差），並且返回了歷史上的今天。
 
-在 chain 和 agent 对象上都会有 `verbose` 这个参数，这个是个非常有用的参数，开启他后我们可以看到完整的 chain 执行过程。
+在 chain 和 agent 對像上都會有 `verbose` 這個參數，這個是個非常有用的參數，開啟他後我們可以看到完整的 chain 執行過程。
 
-可以在上面返回的结果看到，他将我们的问题拆分成了几个步骤，然后一步一步得到最终的答案。
+可以在上面返回的結果看到，他將我們的問題拆分成了幾個步驟，然後一步一步得到最終的答案。
 
-关于agent type 几个选项的含义（理解不了也不会影响下面的学习，用多了自然理解了）：
+關於agent type 幾個選項的含義（理解不了也不會影響下面的學習，用多了自然理解了）：
 
-* zero-shot-react-description: 根据工具的描述和请求内容的来决定使用哪个工具（最常用）
-* react-docstore: 使用 ReAct 框架和 docstore 交互, 使用`Search` 和`Lookup` 工具, 前者用来搜, 后者寻找term, 举例: `Wipipedia` 工具
-* self-ask-with-search 此代理只使用一个工具: Intermediate Answer, 它会为问题寻找事实答案(指的非 gpt 生成的答案, 而是在网络中,文本中已存在的), 如 `Google search API` 工具
-* conversational-react-description: 为会话设置而设计的代理, 它的prompt会被设计的具有会话性, 且还是会使用 ReAct 框架来决定使用来个工具, 并且将过往的会话交互存入内存
+* zero-shot-react-description: 根據工具的描述和請求內容的來決定使用哪個工具（最常用）
+* react-docstore: 使用 ReAct 框架和 docstore 交互, 使用`Search` 和`Lookup` 工具, 前者用來搜, 後者尋找term, 舉例: `Wipipedia` 工具
+* self-ask-with-search 此代理只使用一個工具: Intermediate Answer, 它會為問題尋找事實答案(指的非 gpt 生成的答案, 而是在網絡中,文本中已存在的), 如 `Google search API` 工具
+* conversational-react-description: 為會話設置而設計的代理, 它的prompt會被設計的具有會話性, 且還是會使用 ReAct 框架來決定使用來個工具, 並且將過往的會話交互存入內存
 
-> reAct 介绍可以看这个：https://arxiv.org/pdf/2210.03629.pdf
+> reAct 介紹可以看這個：https://arxiv.org/pdf/2210.03629.pdf
 >
-> LLM 的 ReAct 模式的 Python 实现: https://til.simonwillison.net/llms/python-react-pattern
+> LLM 的 ReAct 模式的 Python 實現: https://til.simonwillison.net/llms/python-react-pattern
 >
-> agent type 官方解释：
+> agent type 官方解釋：
 >
 > https://python.langchain.com/en/latest/modules/agents/agents/agent_types.html?highlight=zero-shot-react-description
 
-> 有一点要说明的是，这个 `serpapi` 貌似对中文不是很友好，所以提问的 prompt 建议使用英文。
+> 有一點要說明的是，這個 `serpapi` 貌似對中文不是很友好，所以提問的 prompt 建議使用英文。
 
-当然，官方已经写好了 `ChatGPT Plugins` 的 agent，未来 chatgpt 能用啥插件，我们在 api 里面也能用插件，想想都美滋滋。
+當然，官方已經寫好了 `ChatGPT Plugins` 的 agent，未來 chatgpt 能用啥插件，我們在 api 裡面也能用插件，想想都美滋滋。
 
-不过目前只能使用不用授权的插件，期待未来官方解决这个。
+不過目前只能使用不用授權的插件，期待未來官方解決這個。
 
-感兴趣的可以看这个文档：https://python.langchain.com/en/latest/modules/agents/tools/examples/chatgpt_plugins.html
+感興趣的可以看這個文檔：https://python.langchain.com/en/latest/modules/agents/tools/examples/chatgpt_plugins.html
 
-> Chatgpt 只能给官方赚钱，而 Openai API 能给我赚钱
+> Chatgpt 只能給官方賺錢，而 Openai API 能給我賺錢
 
-### 对超长文本进行总结
+### 對超長文本進行總結
 
-假如我们想要用 openai api 对一个段文本进行总结，我们通常的做法就是直接发给 api 让他总结。但是如果文本超过了 api 最大的 token 限制就会报错。
+假如我們想要用 openai api 對一個段文本進行總結，我們通常的做法就是直接發給 api 讓他總結。但是如果文本超過了 api 最大的 token 限制就會報錯。
 
-这时，我们一般会进行对文章进行分段，比如通过 tiktoken 计算并分割，然后将各段发送给 api 进行总结，最后将各段的总结再进行一个全部的总结。
+這時，我們一般會進行對文章進行分段，比如通過 tiktoken 計算並分割，然後將各段發送給 api 進行總結，最後將各段的總結再進行一個全部的總結。
 
-如果，你用是 LangChain，他很好的帮我们处理了这个过程，使得我们编写代码变的非常简单。
+如果，你用是 LangChain，他很好的幫我們處理了這個過程，使得我們編寫代碼變的非常簡單。
 
-废话不多说，直接上代码。
+廢話不多說，直接上代碼。
 
 ```python
 from langchain.document_loaders import UnstructuredFileLoader
@@ -257,9 +257,9 @@ from langchain.chains.summarize import load_summarize_chain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain import OpenAI
 
-# 导入文本
+# 導入文本
 loader = UnstructuredFileLoader("/content/sample_data/data/lg_test.txt")
-# 将文本转成 Document 对象
+# 將文本轉成 Document 對像
 document = loader.load()
 print(f'documents:{len(document)}')
 
@@ -273,55 +273,55 @@ text_splitter = RecursiveCharacterTextSplitter(
 split_documents = text_splitter.split_documents(document)
 print(f'documents:{len(split_documents)}')
 
-# 加载 llm 模型
+# 加載 llm 模型
 llm = OpenAI(model_name="text-davinci-003", max_tokens=1500)
 
-# 创建总结链
+# 創建總結鏈
 chain = load_summarize_chain(llm, chain_type="refine", verbose=True)
 
-# 执行总结链，（为了快速演示，只总结前5段）
+# 執行總結鏈，（為了快速演示，只總結前5段）
 chain.run(split_documents[:5])
 ```
 
-首先我们对切割前和切割后的 document 个数进行了打印，我们可以看到，切割前就是只有整篇的一个 document，切割完成后，会把上面一个 document 切成 317 个 document。
+首先我們對切割前和切割後的 document 個數進行了打印，我們可以看到，切割前就是只有整篇的一個 document，切割完成後，會把上面一個 document 切成 317 個 document。
 
 ![image-20230405162631460](doc/image-20230405162631460.png)
 
-最终输出了对前 5 个 document 的总结。
+最終輸出了對前 5 個 document 的總結。
 
 ![image-20230405162937249](doc/image-20230405162937249.png)
 
-这里有几个参数需要注意：
+這裡有幾個參數需要注意：
 
-**文本分割器的 `chunk_overlap` 参数**
+**文本分割器的 `chunk_overlap` 參數**
 
-这个是指切割后的每个 document 里包含几个上一个 document 结尾的内容，主要作用是为了增加每个 document 的上下文关联。比如，`chunk_overlap=0`时， 第一个 document 为 aaaaaa，第二个为 bbbbbb；当 `chunk_overlap=2` 时，第一个 document 为 aaaaaa，第二个为 aabbbbbb。
+這個是指切割後的每個 document 裡包含幾個上一個 document 結尾的內容，主要作用是為了增加每個 document 的上下文關聯。比如，`chunk_overlap=0`時， 第一個 document 為 aaaaaa，第二個為 bbbbbb；當 `chunk_overlap=2` 時，第一個 document 為 aaaaaa，第二個為 aabbbbbb。
 
-不过，这个也不是绝对的，要看所使用的那个文本分割模型内部的具体算法。
+不過，這個也不是絕對的，要看所使用的那個文本分割模型內部的具體算法。
 
-> 文本分割器可以参考这个文档：https://python.langchain.com/en/latest/modules/indexes/text_splitters.html
+> 文本分割器可以參考這個文檔：https://python.langchain.com/en/latest/modules/indexes/text_splitters.html
 
-**chain 的 `chain_type` 参数**
+**chain 的 `chain_type` 參數**
 
-这个参数主要控制了将 document 传递给 llm 模型的方式，一共有 4 种方式：
+這個參數主要控制了將 document 傳遞給 llm 模型的方式，一共有 4 種方式：
 
-`stuff`: 这种最简单粗暴，会把所有的 document 一次全部传给 llm 模型进行总结。如果document很多的话，势必会报超出最大 token 限制的错，所以总结文本的时候一般不会选中这个。
+`stuff`: 這種最簡單粗暴，會把所有的 document 一次全部傳給 llm 模型進行總結。如果document很多的話，勢必會報超出最大 token 限制的錯，所以總結文本的時候一般不會選中這個。
 
-`map_reduce`: 这个方式会先将每个 document 进行总结，最后将所有 document 总结出的结果再进行一次总结。
+`map_reduce`: 這個方式會先將每個 document 進行總結，最後將所有 document 總結出的結果再進行一次總結。
 
 ![image-20230405165752743](doc/image-20230405165752743.png)
 
-`refine`: 这种方式会先总结第一个 document，然后在将第一个 document 总结出的内容和第二个 document 一起发给 llm 模型在进行总结，以此类推。这种方式的好处就是在总结后一个 document 的时候，会带着前一个的 document 进行总结，给需要总结的 document 添加了上下文，增加了总结内容的连贯性。
+`refine`: 這種方式會先總結第一個 document，然後在將第一個 document 總結出的內容和第二個 document 一起發給 llm 模型在進行總結，以此類推。這種方式的好處就是在總結後一個 document 的時候，會帶著前一個的 document 進行總結，給需要總結的 document 添加了上下文，增加了總結內容的連貫性。
 
 ![image-20230405170617383](doc/image-20230405170617383.png)
 
-`map_rerank`: 这种一般不会用在总结的 chain 上，而是会用在问答的 chain 上，他其实是一种搜索答案的匹配方式。首先你要给出一个问题，他会根据问题给每个 document 计算一个这个 document 能回答这个问题的概率分数，然后找到分数最高的那个 document ，在通过把这个 document 转化为问题的 prompt 的一部分（问题+document）发送给 llm 模型，最后 llm 模型返回具体答案。
+`map_rerank`: 這種一般不會用在總結的 chain 上，而是會用在問答的 chain 上，他其實是一種搜索答案的匹配方式。首先你要給出一個問題，他會根據問題給每個 document 計算一個這個 document 能回答這個問題的概率分數，然後找到分數最高的那個 document ，在通過把這個 document 轉化為問題的 prompt 的一部分（問題+document）發送給 llm 模型，最後 llm 模型返回具體答案。
 
-### 构建本地知识库问答机器人
+### 構建本地知識庫問答機器人
 
-在这个例子中，我们会介绍如何从我们本地读取多个文档构建知识库，并且使用 Openai API 在知识库中进行搜索并给出答案。
+在這個例子中，我們會介紹如何從我們本地讀取多個文檔構建知識庫，並且使用 Openai API 在知識庫中進行搜索並給出答案。
 
-这个是个很有用的教程，比如可以很方便的做一个可以介绍公司业务的机器人，或是介绍一个产品的机器人。
+這個是個很有用的教程，比如可以很方便的做一個可以介紹公司業務的機器人，或是介紹一個產品的機器人。
 
 ```python
 from langchain.embeddings.openai import OpenAIEmbeddings
@@ -331,89 +331,89 @@ from langchain import OpenAI
 from langchain.document_loaders import DirectoryLoader
 from langchain.chains import RetrievalQA
 
-# 加载文件夹中的所有txt类型的文件
+# 加載文件夾中的所有txt類型的文件
 loader = DirectoryLoader('/content/sample_data/data/', glob='**/*.txt')
-# 将数据转成 document 对象，每个文件会作为一个 document
+# 將數據轉成 document 對象，每個文件會作為一個 document
 documents = loader.load()
 
-# 初始化加载器
+# 初始化加載器
 text_splitter = CharacterTextSplitter(chunk_size=100, chunk_overlap=0)
-# 切割加载的 document
+# 切割加載的 document
 split_docs = text_splitter.split_documents(documents)
 
-# 初始化 openai 的 embeddings 对象
+# 初始化 openai 的 embeddings 對像
 embeddings = OpenAIEmbeddings()
-# 将 document 通过 openai 的 embeddings 对象计算 embedding 向量信息并临时存入 Chroma 向量数据库，用于后续匹配查询
+# 將 document 通過 openai 的 embeddings 對像計算 embedding 向量信息並臨時存入 Chroma 向量數據庫，用於後續匹配查詢
 docsearch = Chroma.from_documents(split_docs, embeddings)
 
-# 创建问答对象
+# 創建問答對像
 qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=docsearch.as_retriever(), return_source_documents=True)
-# 进行问答
-result = qa({"query": "科大讯飞今年第一季度收入是多少？"})
+# 進行問答
+result = qa({"query": "科大訊飛今年第一季度收入是多少？"})
 print(result)
 ```
 
 ![image-20230405173730382](doc/image-20230405173730382.png)
 
-我们可以通过结果看到，他成功的从我们的给到的数据中获取了正确的答案。
+我們可以通過結果看到，他成功的從我們的給到的數據中獲取了正確的答案。
 
-> 关于 Openai embeddings 详细资料可以参看这个连接: https://platform.openai.com/docs/guides/embeddings
+> 關於 Openai embeddings 詳細資料可以參看這個連接: https://platform.openai.com/docs/guides/embeddings
 
-### 构建向量索引数据库
+### 構建向量索引數據庫
 
-我们上个案例里面有一步是将 document 信息转换成向量信息和embeddings的信息并临时存入 Chroma 数据库。
+我們上個案例裡面有一步是將 document 信息轉換成向量信息和embeddings的信息並臨時存入 Chroma 數據庫。
 
-因为是临时存入，所以当我们上面的代码执行完成后，上面的向量化后的数据将会丢失。如果想下次使用，那么就还需要再计算一次embeddings，这肯定不是我们想要的。
+因為是臨時存入，所以當我們上面的代碼執行完成後，上面的向量化後的數據將會丟失。如果想下次使用，那麼就還需要再計算一次embeddings，這肯定不是我們想要的。
 
-那么，这个案例我们就来通过 Chroma 和 Pinecone 这两个数据库来讲一下如何做向量数据持久化。
+那麼，這個案例我們就來通過 Chroma 和 Pinecone 這兩個數據庫來講一下如何做向量數據持久化。
 
-> 因为 LangChain 支持的数据库有很多，所以这里就介绍两个用的比较多的，更多的可以参看文档:https://python.langchain.com/en/latest/modules/indexes/vectorstores/getting\_started.html
+> 因為 LangChain 支持的數據庫有很多，所以這裡就介紹兩個用的比較多的，更多的可以參看文檔:https://python.langchain.com/en/latest/modules/indexes/vectorstores/getting\_started.html
 
 **Chroma**
 
-chroma 是个本地的向量数据库，他提供的一个 `persist_directory` 来设置持久化目录进行持久化。读取时，只需要调取 `from_document` 方法加载即可。
+chroma 是個本地的向量數據庫，他提供的一個 `persist_directory` 來設置持久化目錄進行持久化。讀取時，只需要調取 `from_document` 方法加載即可。
 
 ```python
 from langchain.vectorstores import Chroma
 
-# 持久化数据
+# 持久化數據
 docsearch = Chroma.from_documents(documents, embeddings, persist_directory="D:/vector_store")
 docsearch.persist()
 
-# 加载数据
+# 加載數據
 docsearch = Chroma(persist_directory="D:/vector_store", embedding_function=embeddings)
 
 ```
 
 **Pinecone**
 
-Pinecone 是一个在线的向量数据库。所以，我可以第一步依旧是注册，然后拿到对应的 api key。https://app.pinecone.io/
+Pinecone 是一個在線的向量數據庫。所以，我可以第一步依舊是註冊，然後拿到對應的 api key。https://app.pinecone.io/
 
-> 免费版如果索引14天不使用会被自动清除。
+> 免費版如果索引14天不使用會被自動清除。
 
-然后创建我们的数据库：
+然後創建我們的數據庫：
 
-Index Name：这个随意
+Index Name：這個隨意
 
-Dimensions：OpenAI 的 text-embedding-ada-002 模型为 OUTPUT DIMENSIONS 为 1536，所以我们这里填 1536
+Dimensions：OpenAI 的 text-embedding-ada-002 模型為 OUTPUT DIMENSIONS 為 1536，所以我們這裡填 1536
 
-Metric：可以默认为 cosine
+Metric：可以默認為 cosine
 
-选择starter plan
+選擇starter plan
 
 ![image-20230405184646314](doc/starter-plan.png)
 
-持久化数据和加载数据代码如下
+持久化數據和加載數據代碼如下
 
 ```python
-# 持久化数据
+# 持久化數據
 docsearch = Pinecone.from_texts([t.page_content for t in split_docs], embeddings, index_name=index_name)
 
-# 加载数据
+# 加載數據
 docsearch = Pinecone.from_existing_index(index_name, embeddings)
 ```
 
-一个简单从数据库获取 embeddings，并回答的代码如下
+一個簡單從數據庫獲取 embeddings，並回答的代碼如下
 
 ```python
 from langchain.text_splitter import CharacterTextSplitter
@@ -432,23 +432,23 @@ pinecone.init(
 )
 
 loader = DirectoryLoader('/content/sample_data/data/', glob='**/*.txt')
-# 将数据转成 document 对象，每个文件会作为一个 document
+# 將數據轉成 document 對象，每個文件會作為一個 document
 documents = loader.load()
 
-# 初始化加载器
+# 初始化加載器
 text_splitter = CharacterTextSplitter(chunk_size=500, chunk_overlap=0)
-# 切割加载的 document
+# 切割加載的 document
 split_docs = text_splitter.split_documents(documents)
 
 index_name="liaokong-test"
 
-# 持久化数据
+# 持久化數據
 # docsearch = Pinecone.from_texts([t.page_content for t in split_docs], embeddings, index_name=index_name)
 
-# 加载数据
+# 加載數據
 docsearch = Pinecone.from_existing_index(index_name,embeddings)
 
-query = "科大讯飞今年第一季度收入是多少？"
+query = "科大訊飛今年第一季度收入是多少？"
 docs = docsearch.similarity_search(query, include_metadata=True)
 
 llm = OpenAI(temperature=0)
@@ -458,9 +458,9 @@ chain.run(input_documents=docs, question=query)
 
 ![image-20230407001803057](doc/image-20230407001803057.png)
 
-### 使用GPT3.5模型构建油管频道问答机器人
+### 使用GPT3.5模型構建油管頻道問答機器人
 
-在 chatgpt api（也就是 GPT-3.5-Turbo）模型出来后，因钱少活好深受大家喜爱，所以 LangChain 也加入了专属的链和模型，我们来跟着这个例子看下如何使用他。
+在 chatgpt api（也就是 GPT-3.5-Turbo）模型出來後，因錢少活好深受大家喜愛，所以 LangChain 也加入了專屬的鏈和模型，我們來跟著這個例子看下如何使用他。
 
 ```python
 import os
@@ -478,9 +478,9 @@ from langchain.prompts.chat import (
   HumanMessagePromptTemplate
 )
 
-# 加载 youtube 频道
+# 加載 youtube 頻道
 loader = YoutubeLoader.from_youtube_url('https://www.youtube.com/watch?v=Dj60HHy-Kqk')
-# 将数据转成 document
+# 將數據轉成 document
 documents = loader.load()
 
 # 初始化文本分割器
@@ -495,9 +495,9 @@ documents = text_splitter.split_documents(documents)
 # 初始化 openai embeddings
 embeddings = OpenAIEmbeddings()
 
-# 将数据存入向量存储
+# 將數據存入向量存儲
 vector_store = Chroma.from_documents(documents, embeddings)
-# 通过向量存储初始化检索器
+# 通過向量存儲初始化檢索器
 retriever = vector_store.as_retriever()
 
 system_template = """
@@ -509,30 +509,30 @@ If you don't know the answer, say you don't, don't try to make it up. And answer
 {chat_history}
 """
 
-# 构建初始 messages 列表，这里可以理解为是 openai 传入的 messages 参数
+# 構建初始 messages 列表，這裡可以理解為是 openai 傳入的 messages 參數
 messages = [
   SystemMessagePromptTemplate.from_template(system_template),
   HumanMessagePromptTemplate.from_template('{question}')
 ]
 
-# 初始化 prompt 对象
+# 初始化 prompt 對像
 prompt = ChatPromptTemplate.from_messages(messages)
 
 
-# 初始化问答链
+# 初始化問答鏈
 qa = ConversationalRetrievalChain.from_llm(ChatOpenAI(temperature=0.1,max_tokens=2048),retriever,condense_question_prompt=prompt)
 
 
 chat_history = []
 while True:
-  question = input('问题：')
-  # 开始发送问题 chat_history 为必须参数,用于存储对话历史
+  question = input('問題：')
+  # 開始發送問題 chat_history 為必須參數,用於存儲對話歷史
   result = qa({'question': question, 'chat_history': chat_history})
   chat_history.append((question, result['answer']))
   print(result['answer'])
 ```
 
-我们可以看到他能很准确的围绕这个油管视频进行问答
+我們可以看到他能很準確的圍繞這個油管視頻進行問答
 
 ![image-20230406211923672](doc/image-20230406211923672.png)
 
@@ -546,23 +546,23 @@ chat = ChatOpenAI(streaming=True, callback_manager=CallbackManager([StreamingStd
 resp = chat(chat_prompt_with_values.to_messages())
 ```
 
-### 用 OpenAI 连接万种工具
+### 用 OpenAI 連接萬種工具
 
-我们主要是结合使用 `zapier` 来实现将万种工具连接起来。
+我們主要是結合使用 `zapier` 來實現將萬種工具連接起來。
 
-所以我们第一步依旧是需要申请账号和他的自然语言 api key。https://zapier.com/l/natural-language-actions
+所以我們第一步依舊是需要申請賬號和他的自然語言 api key。https://zapier.com/l/natural-language-actions
 
-他的 api key 虽然需要填写信息申请。但是基本填入信息后，基本可以秒在邮箱里看到审核通过的邮件。
+他的 api key 雖然需要填寫信息申請。但是基本填入信息後，基本可以秒在郵箱裡看到審核通過的郵件。
 
-然后，我们通过右键里面的连接打开我们的api 配置页面。我们点击右侧的 `Manage Actions` 来配置我们要使用哪些应用。
+然後，我們通過右鍵裡面的連接打開我們的api 配置頁面。我們點擊右側的 `Manage Actions` 來配置我們要使用哪些應用。
 
-我在这里配置了 Gmail 读取和发邮件的 action，并且所有字段都选的是通过 AI 猜。
+我在這裡配置了 Gmail 讀取和發郵件的 action，並且所有字段都選的是通過 AI 猜。
 
 ![image-20230406233319250](doc/image-20230406233319250.png)
 
 ![image-20230406234827815](doc/image-20230406234827815.png)
 
-配置好后，我们开始写代码
+配置好後，我們開始寫代碼
 
 ```python
 import os
@@ -581,36 +581,36 @@ zapier = ZapierNLAWrapper()
 toolkit = ZapierToolkit.from_zapier_nla_wrapper(zapier)
 agent = initialize_agent(toolkit.get_tools(), llm, agent="zero-shot-react-description", verbose=True)
 
-# 我们可以通过打印的方式看到我们都在 Zapier 里面配置了哪些可以用的工具
+# 我們可以通過打印的方式看到我們都在 Zapier 裡面配置了哪些可以用的工具
 for tool in toolkit.get_tools():
   print (tool.name)
   print (tool.description)
   print ("\n\n")
 
-agent.run('请用中文总结最后一封"******@qq.com"发给我的邮件。并将总结发送给"******@qq.com"')
+agent.run('請用中文總結最後一封"******@qq.com"發給我的郵件。並將總結髮送給"******@qq.com"')
 ```
 
 ![image-20230406234712909](doc/image-20230406234712909.png)
 
-我们可以看到他成功读取了`******@qq.com`给他发送的最后一封邮件，并将总结的内容又发送给了`******@qq.com`
+我們可以看到他成功讀取了`******@qq.com`給他發送的最後一封郵件，並將總結的內容又發送給了`******@qq.com`
 
-这是我发送给 Gmail 的邮件。
+這是我發送給 Gmail 的郵件。
 
 ![image-20230406234017369](doc/image-20230406234017369.png)
 
-这是他发送给 QQ 邮箱的邮件。
+這是他發送給 QQ 郵箱的郵件。
 
 ![image-20230406234800632](doc/image-20230406234800632.png)
 
-这只是个小例子，因为 `zapier` 有数以千计的应用，所以我们可以轻松结合 openai api 搭建自己的工作流。
+這只是個小例子，因為 `zapier` 有數以千計的應用，所以我們可以輕鬆結合 openai api 搭建自己的工作流。
 
-## 小例子们
+## 小例子們
 
-一些比较大的知识点都已经讲完了，后面的内容都是一些比较有趣的小例子，当作拓展延伸。
+一些比較大的知識點都已經講完了，後面的內容都是一些比較有趣的小例子，當作拓展延伸。
 
-### **执行多个chain**
+### **執行多個chain**
 
-因为他是链式的，所以他也可以按顺序依次去执行多个 chain
+因為他是鏈式的，所以他也可以按順序依次去執行多個 chain
 
 ```python
 from langchain.llms import OpenAI
@@ -618,7 +618,7 @@ from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 from langchain.chains import SimpleSequentialChain
 
-# location 链
+# location 鏈
 llm = OpenAI(temperature=1)
 template = """Your job is to come up with a classic dish from the area that the users suggests.
 % USER LOCATION
@@ -629,7 +629,7 @@ YOUR RESPONSE:
 prompt_template = PromptTemplate(input_variables=["user_location"], template=template)
 location_chain = LLMChain(llm=llm, prompt=prompt_template)
 
-# meal 链
+# meal 鏈
 template = """Given a meal, give a short and simple recipe on how to make that dish at home.
 % MEAL
 {user_meal}
@@ -639,16 +639,16 @@ YOUR RESPONSE:
 prompt_template = PromptTemplate(input_variables=["user_meal"], template=template)
 meal_chain = LLMChain(llm=llm, prompt=prompt_template)
 
-# 通过 SimpleSequentialChain 串联起来，第一个答案会被替换第二个中的user_meal，然后再进行询问
+# 通過 SimpleSequentialChain 串聯起來，第一個答案會被替換第二箇中的user_meal，然後再進行詢問
 overall_chain = SimpleSequentialChain(chains=[location_chain, meal_chain], verbose=True)
 review = overall_chain.run("Rome")
 ```
 
 ![image-20230406000133339](doc/image-20230406000133339.png)
 
-### **结构化输出**
+### **結構化輸出**
 
-有时候我们希望输出的内容不是文本，而是像 json 那样结构化的数据。
+有時候我們希望輸出的內容不是文本，而是像 json 那樣結構化的數據。
 
 ```python
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
@@ -657,7 +657,7 @@ from langchain.llms import OpenAI
 
 llm = OpenAI(model_name="text-davinci-003")
 
-# 告诉他我们生成的内容需要哪些字段，每个字段类型式啥
+# 告訴他我們生成的內容需要哪些字段，每個字段類型式啥
 response_schemas = [
     ResponseSchema(name="bad_string", description="This a poorly formatted user input string"),
     ResponseSchema(name="good_string", description="This is your response, a reformatted response")
@@ -685,7 +685,7 @@ Reformat it and make sure all the words are spelled correctly
 YOUR RESPONSE:
 """
 
-# 将我们的格式描述嵌入到 prompt 中去，告诉 llm 我们需要他输出什么样格式的内容
+# 將我們的格式描述嵌入到 prompt 中去，告訴 llm 我們需要他輸出什麼樣格式的內容
 prompt = PromptTemplate(
     input_variables=["user_input"],
     partial_variables={"format_instructions": format_instructions},
@@ -695,19 +695,19 @@ prompt = PromptTemplate(
 promptValue = prompt.format(user_input="welcom to califonya!")
 llm_output = llm(promptValue)
 
-# 使用解析器进行解析生成的内容
+# 使用解析器進行解析生成的內容
 output_parser.parse(llm_output)
 ```
 
 ![image-20230406000017276](doc/image-20230406000017276.png)
 
-### **爬取网页并输出JSON数据**
+### **爬取網頁並輸出JSON數據**
 
-有些时候我们需要爬取一些<mark style="color:red;">**结构性比较强**</mark>的网页，并且需要将网页中的信息以JSON的方式返回回来。
+有些時候我們需要爬取一些<mark style="color:red;">**結構性比較強**</mark>的網頁，並且需要將網頁中的信息以JSON的方式返回回來。
 
-我们就可以使用 `LLMRequestsChain` 类去实现，具体可以参考下面代码
+我們就可以使用 `LLMRequestsChain` 類去實現，具體可以參考下面代碼
 
-> 为了方便理解，我在例子中直接使用了Prompt的方法去格式化输出结果，而没用使用上个案例中用到的 `StructuredOutputParser`去格式化，也算是提供了另外一种格式化的思路
+> 為了方便理解，我在例子中直接使用了Prompt的方法去格式化輸出結果，而沒用使用上個案例中用到的 `StructuredOutputParser`去格式化，也算是提供了另外一種格式化的思路
 
 ```python
 from langchain.prompts import PromptTemplate
@@ -716,12 +716,12 @@ from langchain.chains import LLMRequestsChain, LLMChain
 
 llm = OpenAI(model_name="gpt-3.5-turbo", temperature=0)
 
-template = """在 >>> 和 <<< 之间是网页的返回的HTML内容。
-网页是新浪财经A股上市公司的公司简介。
-请抽取参数请求的信息。
+template = """在 >>> 和 <<< 之間是網頁的返回的HTML內容。
+網頁是新浪財經A股上市公司的公司簡介。
+請抽取參數請求的信息。
 
 >>> {requests_result} <<<
-请使用如下的JSON格式返回数据
+請使用如下的JSON格式返回數據
 {{
   "company_name":"a",
   "company_english_name":"b",
@@ -748,11 +748,11 @@ response = chain(inputs)
 print(response['output'])
 ```
 
-我们可以看到，他很好的将格式化后的结果输出了出来
+我們可以看到，他很好的將格式化後的結果輸出了出來
 
 <figure><img src="doc/image-20230510234934.png" alt=""><figcaption></figcaption></figure>
 
-### **自定义agent中所使用的工具**
+### **自定義agent中所使用的工具**
 
 ```python
 from langchain.agents import initialize_agent, Tool
@@ -763,11 +763,11 @@ from langchain import LLMMathChain, SerpAPIWrapper
 
 llm = OpenAI(temperature=0)
 
-# 初始化搜索链和计算链
+# 初始化搜索鏈和計算鏈
 search = SerpAPIWrapper()
 llm_math_chain = LLMMathChain(llm=llm, verbose=True)
 
-# 创建一个功能列表，指明这个 agent 里面都有哪些可用工具，agent 执行过程可以看必知概念里的 Agent 那张图
+# 創建一個功能列表，指明這個 agent 裡面都有哪些可用工具，agent 執行過程可以看必知概念裡的 Agent 那張圖
 tools = [
     Tool(
         name = "Search",
@@ -784,22 +784,22 @@ tools = [
 # 初始化 agent
 agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
 
-# 执行 agent
+# 執行 agent
 agent.run("Who is Leo DiCaprio's girlfriend? What is her current age raised to the 0.43 power?")
 
 ```
 
 ![image-20230406002117283](doc/image-20230406002117283.png)
 
-自定义工具里面有个比较有意思的地方，使用哪个工具的权重是靠 `工具中描述内容` 来实现的，和我们之前编程靠数值来控制权重完全不同。
+自定義工具裡面有個比較有意思的地方，使用哪個工具的權重是靠 `工具中描述內容` 來實現的，和我們之前編程靠數值來控制權重完全不同。
 
-比如 Calculator 在描述里面写到，如果你问关于数学的问题就用他这个工具。我们就可以在上面的执行过程中看到，他在我们请求的 prompt 中数学的部分，就选用了Calculator 这个工具进行计算。
+比如 Calculator 在描述裡面寫到，如果你問關於數學的問題就用他這個工具。我們就可以在上面的執行過程中看到，他在我們請求的 prompt 中數學的部分，就選用了Calculator 這個工具進行計算。
 
-### **使用Memory实现一个带记忆的对话机器人**
+### **使用Memory實現一個帶記憶的對話機器人**
 
-上一个例子我们使用的是通过自定义一个列表来存储对话的方式来保存历史的。
+上一個例子我們使用的是通過自定義一個列表來存儲對話的方式來保存歷史的。
 
-当然，你也可以使用自带的 memory 对象来实现这一点。
+當然，你也可以使用自帶的 memory 對像來實現這一點。
 
 ```python
 from langchain.memory import ChatMessageHistory
@@ -807,28 +807,28 @@ from langchain.chat_models import ChatOpenAI
 
 chat = ChatOpenAI(temperature=0)
 
-# 初始化 MessageHistory 对象
+# 初始化 MessageHistory 對像
 history = ChatMessageHistory()
 
-# 给 MessageHistory 对象添加对话内容
+# 給 MessageHistory 對像添加對話內容
 history.add_ai_message("你好！")
-history.add_user_message("中国的首都是哪里？")
+history.add_user_message("中國的首都是哪裡？")
 
-# 执行对话
+# 執行對話
 ai_response = chat(history.messages)
 print(ai_response)
 ```
 
 ### **使用 Hugging Face 模型**
 
-使用 Hugging Face 模型之前，需要先设置环境变量
+使用 Hugging Face 模型之前，需要先設置環境變量
 
 ```python
 import os
 os.environ['HUGGINGFACEHUB_API_TOKEN'] = ''
 ```
 
-使用在线的 Hugging Face 模型
+使用在線的 Hugging Face 模型
 
 ```python
 from langchain import PromptTemplate, HuggingFaceHub, LLMChain
@@ -844,7 +844,7 @@ question = "What NFL team won the Super Bowl in the year Justin Beiber was born?
 print(llm_chain.run(question))
 ```
 
-将 Hugging Face 模型直接拉到本地使用
+將 Hugging Face 模型直接拉到本地使用
 
 ```python
 from langchain import PromptTemplate, LLMChain
@@ -874,15 +874,15 @@ question = "What is the capital of England?"
 print(llm_chain.run(question))
 ```
 
-将模型拉到本地使用的好处：
+將模型拉到本地使用的好處：
 
-* 训练模型
+* 訓練模型
 * 可以使用本地的 GPU
-* 有些模型无法在 Hugging Face 运行
+* 有些模型無法在 Hugging Face 運行
 
-### **通过自然语言执行SQL命令**
+### **通過自然語言執行SQL命令**
 
-我们通过 `SQLDatabaseToolkit` 或者 `SQLDatabaseChain` 都可以实现执行SQL命令的操作
+我們通過 `SQLDatabaseToolkit` 或者 `SQLDatabaseChain` 都可以實現執行SQL命令的操作
 
 ```python
 from langchain.agents import create_sql_agent
@@ -912,22 +912,22 @@ db_chain = SQLDatabaseChain(llm=llm, database=db, verbose=True)
 db_chain.run("How many employees are there?")
 ```
 
-这里可以参考这两篇文档：
+這裡可以參考這兩篇文檔：
 
 [https://python.langchain.com/en/latest/modules/agents/toolkits/examples/sql\_database.html](https://python.langchain.com/en/latest/modules/agents/toolkits/examples/sql\_database.html)
 
 [https://python.langchain.com/en/latest/modules/chains/examples/sqlite.html](https://python.langchain.com/en/latest/modules/chains/examples/sqlite.html)
 
-## 总结
+## 總結
 
-所有的案例都基本已经结束了，希望大家能通过这篇文章的学习有所收获。这篇文章只是对 LangChain 一个初级的讲解，高级的功能希望大家继续探索。
+所有的案例都基本已經結束了，希望大家能通過這篇文章的學習有所收穫。這篇文章只是對 LangChain 一個初級的講解，高級的功能希望大家繼續探索。
 
-并且因为 LangChain 迭代极快，所以后面肯定会随着AI继续的发展，还会迭代出更好用的功能，所以我非常看好这个开源库。
+並且因為 LangChain 迭代極快，所以後面肯定會隨著AI繼續的發展，還會迭代出更好用的功能，所以我非常看好這個開源庫。
 
-希望大家能结合 LangChain 开发出更有创意的产品，而不仅仅只搞一堆各种一键搭建chatgpt聊天客户端的那种产品。
+希望大家能結合 LangChain 開發出更有創意的產品，而不僅僅只搞一堆各種一鍵搭建chatgpt聊天客戶端的那種產品。
 
-这篇标题后面加了个 `01` 是我希望这篇文章只是一个开始，后面如何出现了更好的技术我还是希望能继续更新下去这个系列。
+這篇標題後面加了個 `01` 是我希望這篇文章只是一個開始，後面如何出現了更好的技術我還是希望能繼續更新下去這個系列。
 
-本文章的所有范例代码都在这里，祝大家学习愉快。
+本文章的所有範例代碼都在這裡，祝大家學習愉快。
 
 https://colab.research.google.com/drive/1ArRVMiS-YkhUlobHrU6BeS8fF57UeaPQ?usp=sharing 
